@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	hostName    = "com.google.chrome.example.echo"
+	hostName    = "com.github.yulog.ytmusic_notifier"
 	exeName     = "native-app.exe"
 	extensionID = "pckomeadlamhidfmcmhkfdehlfblaeah" // Replace with your actual extension ID later
 )
@@ -54,7 +54,7 @@ func main() {
 
 	manifest := Manifest{
 		Name:        hostName,
-		Description: "Chrome Native Messaging Example Host",
+		Description: "YouTube Music Notifier",
 		Path:        exePath,
 		Type:        "stdio",
 		AllowedOrigins: []string{
