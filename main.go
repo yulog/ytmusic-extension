@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
@@ -14,6 +15,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"github.com/yulog/ytmusic-extension/resources/fonts"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
@@ -96,13 +99,13 @@ func (d *WindowDragger) Update(g *Game) {
 }
 
 func (g *Game) initFont() {
-	file, err := os.Open("Mplus1p-Regular.ttf")
-	if err != nil {
-		log.Fatalf("Failed to open font file: %v", err)
-	}
-	defer file.Close() // Ensure the file is closed after use
+	// file, err := os.Open("Mplus1p-Regular.ttf")
+	// if err != nil {
+	// 	log.Fatalf("Failed to open font file: %v", err)
+	// }
+	// defer file.Close() // Ensure the file is closed after use
 
-	source, err := text.NewGoTextFaceSource(file)
+	source, err := text.NewGoTextFaceSource(bytes.NewReader(fonts.MPlus1pRegular))
 	if err != nil {
 		log.Fatal(err)
 	}
