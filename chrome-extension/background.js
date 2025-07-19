@@ -1,5 +1,5 @@
 // Establish connection with the native application
-const port = chrome.runtime.connectNative('com.google.chrome.example.echo');
+const port = chrome.runtime.connectNative('com.github.yulog.ytmusic_notifier');
 
 // Optional: Log messages received from the native app (if any)
 port.onMessage.addListener((msg) => {
