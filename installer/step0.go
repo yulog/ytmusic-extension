@@ -1,8 +1,6 @@
 package main
 
 import (
-	"image"
-
 	"github.com/hajimehoshi/guigui"
 	"github.com/hajimehoshi/guigui/basicwidget"
 	"github.com/hajimehoshi/guigui/layout"
@@ -15,11 +13,9 @@ type Step0 struct {
 	buttonBack basicwidget.Button
 	buttonNext basicwidget.Button
 	// pageSegmentedControl basicwidget.SegmentedControl[string]
-	buttonCancel           basicwidget.Button
-	titleText              basicwidget.Text
-	bodyText               basicwidget.Text
-	navigationPanel        basicwidget.Panel
-	navigationPanelContent navigationPanelContent
+	buttonCancel basicwidget.Button
+	titleText    basicwidget.Text
+	bodyText     basicwidget.Text
 
 	model *Model
 }
@@ -87,9 +83,6 @@ func (t *Step0) Build(context *guigui.Context, appender *guigui.ChildWidgetAppen
 			SecondaryWidget: &t.buttonCancel,
 		},
 	})
-	// TODO: Formではなく、PanelとGridにする
-	t.navigationPanel.SetContent(&t.navigationPanelContent)
-	t.navigationPanel.SetBorder(basicwidget.PanelBorder{Top: true})
 
 	u := basicwidget.UnitSize(context)
 	gl := layout.GridLayout{
@@ -105,8 +98,6 @@ func (t *Step0) Build(context *guigui.Context, appender *guigui.ChildWidgetAppen
 	appender.AppendChildWidgetWithBounds(&t.titleText, gl.CellBounds(0, 0))
 	appender.AppendChildWidgetWithBounds(&t.bodyText, gl.CellBounds(0, 1))
 	appender.AppendChildWidgetWithBounds(&t.form, gl.CellBounds(0, 2))
-	context.SetSize(&t.navigationPanelContent, image.Pt(gl.CellBounds(0, 3).Dx(), guigui.AutoSize), t)
-	appender.AppendChildWidgetWithBounds(&t.navigationPanel, gl.CellBounds(0, 3))
 
 	return nil
 }
