@@ -24,7 +24,12 @@ func (s *Step1) SetModel(model *Model) {
 	s.model = model
 }
 
-func (s *Step1) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (s *Step1) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&s.bodyText)
+	appender.AppendChildWidget(&s.buttonsForm)
+}
+
+func (s *Step1) Build(context *guigui.Context) error {
 	u := basicwidget.UnitSize(context)
 
 	s.bodyText.SetMultiline(true)
@@ -51,14 +56,14 @@ func (s *Step1) Build(context *guigui.Context, appender *guigui.ChildWidgetAppen
 	gl := layout.GridLayout{
 		Bounds: context.Bounds(s).Inset(u / 2),
 		Heights: []layout.Size{
-			layout.FixedSize(s.bodyText.TextSize(context, context.ActualSize(&s.bodyText).X).Y),
+			layout.FixedSize(s.bodyText.DefaultSizeInContainer(context, context.ActualSize(&s.bodyText).X).Y),
 			layout.FixedSize(s.buttonsForm.DefaultSize(context).Y),
 			layout.FlexibleSize(1),
 		},
 		RowGap: u / 2,
 	}
-	appender.AppendChildWidgetWithBounds(&s.bodyText, gl.CellBounds(0, 0))
-	appender.AppendChildWidgetWithBounds(&s.buttonsForm, gl.CellBounds(0, 1))
+	context.SetBounds(&s.bodyText, gl.CellBounds(0, 0), s)
+	context.SetBounds(&s.buttonsForm, gl.CellBounds(0, 1), s)
 
 	return nil
 }

@@ -27,20 +27,37 @@ func (s *Steps) SetModel(model *Model) {
 	s.step5.SetModel(model)
 }
 
-func (s *Steps) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (s *Steps) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
 	switch s.model.Step() {
 	case step0:
-		appender.AppendChildWidgetWithBounds(&s.step0, context.Bounds(s))
+		appender.AppendChildWidget(&s.step0)
 	case step1:
-		appender.AppendChildWidgetWithBounds(&s.step1, context.Bounds(s))
+		appender.AppendChildWidget(&s.step1)
 	case step2:
-		appender.AppendChildWidgetWithBounds(&s.step2, context.Bounds(s))
+		appender.AppendChildWidget(&s.step2)
 	case step3:
-		appender.AppendChildWidgetWithBounds(&s.step3, context.Bounds(s))
+		appender.AppendChildWidget(&s.step3)
 	case step4:
-		appender.AppendChildWidgetWithBounds(&s.step4, context.Bounds(s))
+		appender.AppendChildWidget(&s.step4)
 	case step5:
-		appender.AppendChildWidgetWithBounds(&s.step5, context.Bounds(s))
+		appender.AppendChildWidget(&s.step5)
+	}
+}
+
+func (s *Steps) Build(context *guigui.Context) error {
+	switch s.model.Step() {
+	case step0:
+		context.SetBounds(&s.step0, context.Bounds(s), s)
+	case step1:
+		context.SetBounds(&s.step1, context.Bounds(s), s)
+	case step2:
+		context.SetBounds(&s.step2, context.Bounds(s), s)
+	case step3:
+		context.SetBounds(&s.step3, context.Bounds(s), s)
+	case step4:
+		context.SetBounds(&s.step4, context.Bounds(s), s)
+	case step5:
+		context.SetBounds(&s.step5, context.Bounds(s), s)
 	}
 
 	return nil

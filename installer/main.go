@@ -37,10 +37,17 @@ func (r *Root) updateFontFaceSources(context *guigui.Context) {
 	basicwidget.SetFaceSources(r.faceSourceEntries)
 }
 
-func (r *Root) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (r *Root) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&r.background)
+	appender.AppendChildWidget(&r.sidebar)
+	appender.AppendChildWidget(&r.steps)
+	appender.AppendChildWidget(&r.navbar)
+}
+
+func (r *Root) Build(context *guigui.Context) error {
 	r.updateFontFaceSources(context)
 
-	appender.AppendChildWidgetWithBounds(&r.background, context.Bounds(r))
+	context.SetBounds(&r.background, context.Bounds(r), r)
 
 	r.sidebar.SetModel(&r.model)
 	r.steps.SetModel(&r.model)
@@ -53,7 +60,7 @@ func (r *Root) Build(context *guigui.Context, appender *guigui.ChildWidgetAppend
 			layout.FlexibleSize(1),
 		},
 	}
-	appender.AppendChildWidgetWithBounds(&r.sidebar, gl.CellBounds(0, 0))
+	context.SetBounds(&r.sidebar, gl.CellBounds(0, 0), r)
 	{
 		u := basicwidget.UnitSize(context)
 		gl := layout.GridLayout{
@@ -63,8 +70,8 @@ func (r *Root) Build(context *guigui.Context, appender *guigui.ChildWidgetAppend
 				layout.FixedSize(u + u/2),
 			},
 		}
-		appender.AppendChildWidgetWithBounds(&r.steps, gl.CellBounds(0, 0))
-		appender.AppendChildWidgetWithBounds(&r.navbar, gl.CellBounds(0, 1))
+		context.SetBounds(&r.steps, gl.CellBounds(0, 0), r)
+		context.SetBounds(&r.navbar, gl.CellBounds(0, 1), r)
 	}
 
 	return nil

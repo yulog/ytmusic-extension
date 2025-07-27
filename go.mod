@@ -20,7 +20,7 @@ require (
 	github.com/ebitengine/hideconsole v1.0.0 // indirect
 	github.com/ebitengine/purego v0.9.0-alpha.9 // indirect
 	github.com/go-text/typesetting v0.3.0 // indirect
-	github.com/hajimehoshi/guigui v0.0.0-20250716114721-21ce0dd99b90
+	github.com/hajimehoshi/guigui v0.0.0-20250726135207-847ad085f3c2
 	github.com/jezek/xgb v1.1.1 // indirect
 	github.com/magefile/mage v1.15.0
 	golang.org/x/image v0.29.0 // indirect

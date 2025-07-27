@@ -18,7 +18,11 @@ func (s *Step2) SetModel(model *Model) {
 	s.model = model
 }
 
-func (s *Step2) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (s *Step2) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&s.bodyText)
+}
+
+func (s *Step2) Build(context *guigui.Context) error {
 
 	s.bodyText.SetMultiline(true)
 	s.bodyText.SetAutoWrap(true)
@@ -32,7 +36,7 @@ func (s *Step2) Build(context *guigui.Context, appender *guigui.ChildWidgetAppen
 		},
 		RowGap: u / 2,
 	}
-	appender.AppendChildWidgetWithBounds(&s.bodyText, gl.CellBounds(0, 0))
+	context.SetBounds(&s.bodyText, gl.CellBounds(0, 0), s)
 
 	return nil
 }

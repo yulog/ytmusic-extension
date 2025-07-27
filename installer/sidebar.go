@@ -16,7 +16,11 @@ func (s *Sidebar) SetModel(model *Model) {
 	s.panelContent.SetModel(model)
 }
 
-func (s *Sidebar) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (s *Sidebar) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&s.panel)
+}
+
+func (s *Sidebar) Build(context *guigui.Context) error {
 	s.panel.SetStyle(basicwidget.PanelStyleSide)
 	s.panel.SetBorder(basicwidget.PanelBorder{
 		End: true,
@@ -24,7 +28,7 @@ func (s *Sidebar) Build(context *guigui.Context, appender *guigui.ChildWidgetApp
 	context.SetSize(&s.panelContent, context.ActualSize(s), s)
 	s.panel.SetContent(&s.panelContent)
 
-	appender.AppendChildWidgetWithBounds(&s.panel, context.Bounds(s))
+	context.SetBounds(&s.panel, context.Bounds(s), s)
 
 	return nil
 }
@@ -41,7 +45,11 @@ func (s *sidebarContent) SetModel(model *Model) {
 	s.model = model
 }
 
-func (s *sidebarContent) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (s *sidebarContent) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&s.list)
+}
+
+func (s *sidebarContent) Build(context *guigui.Context) error {
 	s.list.SetStyle(basicwidget.ListStyleSidebar)
 
 	var items []basicwidget.ListItem[int]
@@ -65,7 +73,7 @@ func (s *sidebarContent) Build(context *guigui.Context, appender *guigui.ChildWi
 	})
 	context.SetEnabled(&s.list, false)
 
-	appender.AppendChildWidgetWithBounds(&s.list, context.Bounds(s))
+	context.SetBounds(&s.list, context.Bounds(s), s)
 
 	return nil
 }

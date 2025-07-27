@@ -20,14 +20,18 @@ func (n *Navbar) SetModel(model *Model) {
 	n.panelContent.SetModel(model)
 }
 
-func (n *Navbar) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (n *Navbar) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&n.panel)
+}
+
+func (n *Navbar) Build(context *guigui.Context) error {
 	n.panel.SetBorder(basicwidget.PanelBorder{
 		Top: true,
 	})
 	context.SetSize(&n.panelContent, context.ActualSize(n), n)
 	n.panel.SetContent(&n.panelContent)
 
-	appender.AppendChildWidgetWithBounds(&n.panel, context.Bounds(n))
+	context.SetBounds(&n.panel, context.Bounds(n), n)
 
 	return nil
 }
@@ -47,7 +51,17 @@ func (s *navigationPanelContent) SetModel(model *Model) {
 	s.model = model
 }
 
-func (n *navigationPanelContent) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (n *navigationPanelContent) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	appender.AppendChildWidget(&n.buttonBack)
+	if n.model.CurrentStep().Func.Text != "" {
+		appender.AppendChildWidget(&n.buttonConfirm)
+	} else {
+		appender.AppendChildWidget(&n.buttonNext)
+	}
+	appender.AppendChildWidget(&n.buttonCancel)
+}
+
+func (n *navigationPanelContent) Build(context *guigui.Context) error {
 
 	context.SetEnabled(&n.buttonBack, n.model.CurrentStep().BackButton.Enabled())
 	n.buttonBack.SetText("Back")
@@ -99,13 +113,13 @@ func (n *navigationPanelContent) Build(context *guigui.Context, appender *guigui
 		},
 		ColumnGap: u / 2,
 	}
-	appender.AppendChildWidgetWithBounds(&n.buttonBack, gl.CellBounds(1, 0))
+	context.SetBounds(&n.buttonBack, gl.CellBounds(1, 0), n)
 	if n.model.CurrentStep().Func.Text != "" {
-		appender.AppendChildWidgetWithBounds(&n.buttonConfirm, gl.CellBounds(2, 0))
+		context.SetBounds(&n.buttonConfirm, gl.CellBounds(2, 0), n)
 	} else {
-		appender.AppendChildWidgetWithBounds(&n.buttonNext, gl.CellBounds(2, 0))
+		context.SetBounds(&n.buttonNext, gl.CellBounds(2, 0), n)
 	}
-	appender.AppendChildWidgetWithBounds(&n.buttonCancel, gl.CellBounds(3, 0))
+	context.SetBounds(&n.buttonCancel, gl.CellBounds(3, 0), n)
 
 	return nil
 }
