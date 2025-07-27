@@ -13,22 +13,12 @@ type Steps struct {
 	step3 Step3
 	step4 Step4
 	step5 Step5
-
-	model *Model
-}
-
-func (s *Steps) SetModel(model *Model) {
-	s.model = model
-	s.step0.SetModel(model)
-	s.step1.SetModel(model)
-	s.step2.SetModel(model)
-	s.step3.SetModel(model)
-	s.step4.SetModel(model)
-	s.step5.SetModel(model)
 }
 
 func (s *Steps) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
-	switch s.model.Step() {
+	model := context.Model(s, modelKeyModel).(*Model)
+
+	switch model.Step() {
 	case step0:
 		appender.AppendChildWidget(&s.step0)
 	case step1:
@@ -45,7 +35,9 @@ func (s *Steps) AppendChildWidgets(context *guigui.Context, appender *guigui.Chi
 }
 
 func (s *Steps) Build(context *guigui.Context) error {
-	switch s.model.Step() {
+	model := context.Model(s, modelKeyModel).(*Model)
+
+	switch model.Step() {
 	case step0:
 		context.SetBounds(&s.step0, context.Bounds(s), s)
 	case step1:

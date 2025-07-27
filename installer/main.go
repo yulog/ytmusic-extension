@@ -15,6 +15,12 @@ import (
 	"github.com/hajimehoshi/guigui/layout"
 )
 
+type modelKey int
+
+const (
+	modelKeyModel modelKey = iota
+)
+
 type Root struct {
 	guigui.DefaultWidget
 
@@ -37,6 +43,15 @@ func (r *Root) updateFontFaceSources(context *guigui.Context) {
 	basicwidget.SetFaceSources(r.faceSourceEntries)
 }
 
+func (r *Root) Model(key any) any {
+	switch key {
+	case modelKeyModel:
+		return &r.model
+	default:
+		return nil
+	}
+}
+
 func (r *Root) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
 	appender.AppendChildWidget(&r.background)
 	appender.AppendChildWidget(&r.sidebar)
@@ -48,10 +63,6 @@ func (r *Root) Build(context *guigui.Context) error {
 	r.updateFontFaceSources(context)
 
 	context.SetBounds(&r.background, context.Bounds(r), r)
-
-	r.sidebar.SetModel(&r.model)
-	r.steps.SetModel(&r.model)
-	r.navbar.SetModel(&r.model)
 
 	gl := layout.GridLayout{
 		Bounds: context.Bounds(r),

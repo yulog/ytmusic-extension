@@ -16,10 +16,6 @@ type Navbar struct {
 	panelContent navigationPanelContent
 }
 
-func (n *Navbar) SetModel(model *Model) {
-	n.panelContent.SetModel(model)
-}
-
 func (n *Navbar) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
 	appender.AppendChildWidget(&n.panel)
 }
@@ -43,17 +39,13 @@ type navigationPanelContent struct {
 	buttonNext    basicwidget.Button
 	buttonConfirm basicwidget.Button
 	buttonCancel  basicwidget.Button
-
-	model *Model
-}
-
-func (s *navigationPanelContent) SetModel(model *Model) {
-	s.model = model
 }
 
 func (n *navigationPanelContent) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
+	model := context.Model(n, modelKeyModel).(*Model)
+
 	appender.AppendChildWidget(&n.buttonBack)
-	if n.model.CurrentStep().Func.Text != "" {
+	if model.CurrentStep().Func.Text != "" {
 		appender.AppendChildWidget(&n.buttonConfirm)
 	} else {
 		appender.AppendChildWidget(&n.buttonNext)
@@ -62,19 +54,20 @@ func (n *navigationPanelContent) AppendChildWidgets(context *guigui.Context, app
 }
 
 func (n *navigationPanelContent) Build(context *guigui.Context) error {
+	model := context.Model(n, modelKeyModel).(*Model)
 
-	context.SetEnabled(&n.buttonBack, n.model.CurrentStep().BackButton.Enabled())
+	context.SetEnabled(&n.buttonBack, model.CurrentStep().BackButton.Enabled())
 	n.buttonBack.SetText("Back")
 	n.buttonBack.SetOnUp(func() {
-		n.model.BackStep()
+		model.BackStep()
 	})
 
 	n.buttonNext.SetText("Next")
 	n.buttonNext.SetOnUp(func() {
-		n.model.NextStep()
+		model.NextStep()
 	})
 
-	if s := n.model.CurrentStep(); s.Func.Text != "" {
+	if s := model.CurrentStep(); s.Func.Text != "" {
 		n.buttonConfirm.SetText(s.Func.Text)
 		n.buttonConfirm.SetOnUp(func() {
 			s.Func.Func()
@@ -91,7 +84,7 @@ func (n *navigationPanelContent) Build(context *guigui.Context) error {
 	}
 
 	n.buttonCancel.SetText("Cancel")
-	if s := n.model.CurrentStep(); s.CancelFunc != nil {
+	if s := model.CurrentStep(); s.CancelFunc != nil {
 		n.buttonCancel.SetOnUp(s.CancelFunc)
 	} else {
 		n.buttonCancel.SetOnUp(func() {
@@ -114,7 +107,7 @@ func (n *navigationPanelContent) Build(context *guigui.Context) error {
 		ColumnGap: u / 2,
 	}
 	context.SetBounds(&n.buttonBack, gl.CellBounds(1, 0), n)
-	if n.model.CurrentStep().Func.Text != "" {
+	if model.CurrentStep().Func.Text != "" {
 		context.SetBounds(&n.buttonConfirm, gl.CellBounds(2, 0), n)
 	} else {
 		context.SetBounds(&n.buttonNext, gl.CellBounds(2, 0), n)

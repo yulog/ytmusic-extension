@@ -11,12 +11,6 @@ type Step0 struct {
 
 	titleText basicwidget.Text
 	bodyText  basicwidget.Text
-
-	model *Model
-}
-
-func (s *Step0) SetModel(model *Model) {
-	s.model = model
 }
 
 func (s *Step0) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
@@ -25,6 +19,7 @@ func (s *Step0) AppendChildWidgets(context *guigui.Context, appender *guigui.Chi
 }
 
 func (s *Step0) Build(context *guigui.Context) error {
+	model := context.Model(s, modelKeyModel).(*Model)
 
 	s.titleText.SetMultiline(true)
 	s.titleText.SetAutoWrap(true)
@@ -34,7 +29,7 @@ func (s *Step0) Build(context *guigui.Context) error {
 
 	s.bodyText.SetMultiline(true)
 	s.bodyText.SetAutoWrap(true)
-	s.bodyText.SetValue(s.model.CurrentStep().BodyText)
+	s.bodyText.SetValue(model.CurrentStep().BodyText)
 
 	u := basicwidget.UnitSize(context)
 	gl := layout.GridLayout{

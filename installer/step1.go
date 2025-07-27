@@ -16,12 +16,6 @@ type Step1 struct {
 	buttonsForm basicwidget.Form
 	buttonText  basicwidget.TextInput
 	button      basicwidget.Button
-
-	model *Model
-}
-
-func (s *Step1) SetModel(model *Model) {
-	s.model = model
 }
 
 func (s *Step1) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
@@ -30,20 +24,22 @@ func (s *Step1) AppendChildWidgets(context *guigui.Context, appender *guigui.Chi
 }
 
 func (s *Step1) Build(context *guigui.Context) error {
+	model := context.Model(s, modelKeyModel).(*Model)
+
 	u := basicwidget.UnitSize(context)
 
 	s.bodyText.SetMultiline(true)
 	s.bodyText.SetAutoWrap(true)
-	s.bodyText.SetValue(s.model.CurrentStep().BodyText)
+	s.bodyText.SetValue(model.CurrentStep().BodyText)
 
-	s.buttonText.SetValue(s.model.Steps().Location())
+	s.buttonText.SetValue(model.Steps().Location())
 	s.buttonText.SetOnValueChanged(func(text string, committed bool) {
 		if committed {
-			s.model.Steps().SetLocation(text)
+			model.Steps().SetLocation(text)
 		}
 	})
 	s.button.SetText("Ref...")
-	context.SetEnabled(&s.buttonsForm, s.model.CurrentStep().Form.Enabled())
+	context.SetEnabled(&s.buttonsForm, model.CurrentStep().Form.Enabled())
 
 	s.buttonsForm.SetItems([]basicwidget.FormItem{
 		{

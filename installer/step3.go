@@ -16,12 +16,6 @@ type Step3 struct {
 	buttonsForm basicwidget.Form
 	buttonText  basicwidget.TextInput
 	// button      basicwidget.Button
-
-	model *Model
-}
-
-func (s *Step3) SetModel(model *Model) {
-	s.model = model
 }
 
 func (s *Step3) AppendChildWidgets(context *guigui.Context, appender *guigui.ChildWidgetAppender) {
@@ -30,17 +24,19 @@ func (s *Step3) AppendChildWidgets(context *guigui.Context, appender *guigui.Chi
 }
 
 func (s *Step3) Build(context *guigui.Context) error {
+	model := context.Model(s, modelKeyModel).(*Model)
+
 	u := basicwidget.UnitSize(context)
 
 	s.bodyText.SetMultiline(true)
 	s.bodyText.SetAutoWrap(true)
-	s.bodyText.SetValue(s.model.CurrentStep().BodyText)
+	s.bodyText.SetValue(model.CurrentStep().BodyText)
 
-	s.buttonText.SetValue(s.model.Steps().ExtensionID())
+	s.buttonText.SetValue(model.Steps().ExtensionID())
 	// s.button.SetText("Button")
 	s.buttonText.SetOnValueChanged(func(text string, committed bool) {
 		if committed {
-			s.model.Steps().SetExtensionID(text)
+			model.Steps().SetExtensionID(text)
 		}
 	})
 
