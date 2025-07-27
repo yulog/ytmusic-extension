@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"os"
+	"slices"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"golang.org/x/text/language"
@@ -31,14 +32,15 @@ type Root struct {
 
 	model Model
 
+	locales           []language.Tag
 	faceSourceEntries []basicwidget.FaceSourceEntry
 }
 
 func (r *Root) updateFontFaceSources(context *guigui.Context) {
-	// r.locales = slices.Delete(r.locales, 0, len(r.locales))
-	// r.locales = context.AppendLocales(r.locales)
+	r.locales = slices.Delete(r.locales, 0, len(r.locales))
+	r.locales = context.AppendLocales(r.locales)
 
-	// r.faceSourceEntries = slices.Delete(r.faceSourceEntries, 0, len(r.faceSourceEntries))
+	r.faceSourceEntries = slices.Delete(r.faceSourceEntries, 0, len(r.faceSourceEntries))
 	r.faceSourceEntries = cjkfont.AppendRecommendedFaceSourceEntries(r.faceSourceEntries, []language.Tag{language.Und})
 	basicwidget.SetFaceSources(r.faceSourceEntries)
 }
