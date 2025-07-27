@@ -20,12 +20,7 @@ type Root struct {
 
 	background basicwidget.Background
 	sidebar    Sidebar
-	step0      Step0
-	step1      Step1
-	step2      Step2
-	step3      Step3
-	step4      Step4
-	step5      Step5
+	steps      Steps
 	navbar     Navbar
 
 	model Model
@@ -48,13 +43,8 @@ func (r *Root) Build(context *guigui.Context, appender *guigui.ChildWidgetAppend
 	appender.AppendChildWidgetWithBounds(&r.background, context.Bounds(r))
 
 	r.sidebar.SetModel(&r.model)
+	r.steps.SetModel(&r.model)
 	r.navbar.SetModel(&r.model)
-	r.step0.SetModel(&r.model)
-	r.step1.SetModel(&r.model)
-	r.step2.SetModel(&r.model)
-	r.step3.SetModel(&r.model)
-	r.step4.SetModel(&r.model)
-	r.step5.SetModel(&r.model)
 
 	gl := layout.GridLayout{
 		Bounds: context.Bounds(r),
@@ -64,23 +54,6 @@ func (r *Root) Build(context *guigui.Context, appender *guigui.ChildWidgetAppend
 		},
 	}
 	appender.AppendChildWidgetWithBounds(&r.sidebar, gl.CellBounds(0, 0))
-	// bounds := gl.CellBounds(1, 0)
-	// switch r.model.Mode() {
-	// case "step0":
-	// 	appender.AppendChildWidgetWithBounds(&r.step0, bounds)
-	// case "step1":
-	// 	appender.AppendChildWidgetWithBounds(&r.step1, bounds)
-	// case "step2":
-	// 	appender.AppendChildWidgetWithBounds(&r.step2, bounds)
-	// case "step3":
-	// 	appender.AppendChildWidgetWithBounds(&r.step3, bounds)
-	// case "step4":
-	// 	appender.AppendChildWidgetWithBounds(&r.step4, bounds)
-	// case "step5":
-	// 	appender.AppendChildWidgetWithBounds(&r.step5, bounds)
-	// }
-	// r.navigation.SetContent(&t.navigationPanelContent)
-	// t.navigationPanel.SetBorder(basicwidget.PanelBorder{Top: true})
 	{
 		u := basicwidget.UnitSize(context)
 		gl := layout.GridLayout{
@@ -90,24 +63,8 @@ func (r *Root) Build(context *guigui.Context, appender *guigui.ChildWidgetAppend
 				layout.FixedSize(u + u/2),
 			},
 		}
-		bounds := gl.CellBounds(0, 0)
-		switch r.model.Step() {
-		case step0:
-			appender.AppendChildWidgetWithBounds(&r.step0, bounds)
-		case step1:
-			appender.AppendChildWidgetWithBounds(&r.step1, bounds)
-		case step2:
-			appender.AppendChildWidgetWithBounds(&r.step2, bounds)
-		case step3:
-			appender.AppendChildWidgetWithBounds(&r.step3, bounds)
-		case step4:
-			appender.AppendChildWidgetWithBounds(&r.step4, bounds)
-		case step5:
-			appender.AppendChildWidgetWithBounds(&r.step5, bounds)
-		}
+		appender.AppendChildWidgetWithBounds(&r.steps, gl.CellBounds(0, 0))
 		appender.AppendChildWidgetWithBounds(&r.navbar, gl.CellBounds(0, 1))
-		// context.SetSize(&t.navigationPanelContent, image.Pt(gl.CellBounds(0, 3).Dx(), guigui.AutoSize), t)
-		// appender.AppendChildWidgetWithBounds(&t.navigationPanel, gl.CellBounds(0, 3))
 	}
 
 	return nil

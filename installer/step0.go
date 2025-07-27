@@ -9,95 +9,39 @@ import (
 type Step0 struct {
 	guigui.DefaultWidget
 
-	form       basicwidget.Form
-	buttonBack basicwidget.Button
-	buttonNext basicwidget.Button
-	// pageSegmentedControl basicwidget.SegmentedControl[string]
-	buttonCancel basicwidget.Button
-	titleText    basicwidget.Text
-	bodyText     basicwidget.Text
+	titleText basicwidget.Text
+	bodyText  basicwidget.Text
 
 	model *Model
 }
 
-func (t *Step0) SetModel(model *Model) {
-	t.model = model
+func (s *Step0) SetModel(model *Model) {
+	s.model = model
 }
 
-func (t *Step0) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
+func (s *Step0) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
 
-	t.titleText.SetMultiline(true)
-	t.titleText.SetAutoWrap(true)
-	t.titleText.SetBold(true)
-	t.titleText.SetScale(2)
-	t.titleText.SetValue("Welcome to Installer")
+	s.titleText.SetMultiline(true)
+	s.titleText.SetAutoWrap(true)
+	s.titleText.SetBold(true)
+	s.titleText.SetScale(2)
+	s.titleText.SetValue("Welcome to Installer")
 
-	t.bodyText.SetMultiline(true)
-	// t.sampleText.SetHorizontalAlign(basicwidget.HorizontalAlignLeft)
-	// t.sampleText.SetVerticalAlign(basicwidget.VerticalAlignTop)
-	t.bodyText.SetAutoWrap(true)
-	t.bodyText.SetValue(t.model.Texts().Text())
-
-	t.buttonBack.SetText("Back")
-	t.buttonNext.SetText("Next")
-	t.buttonNext.SetOnUp(func() {
-		t.model.SetStep(step1)
-	})
-
-	// t.pageSegmentedControl.SetItems([]basicwidget.SegmentedControlItem[string]{
-	// 	{
-	// 		Text: "Back",
-	// 		ID:   "back",
-	// 	},
-	// 	{
-	// 		Text: "Next",
-	// 		ID:   "next",
-	// 	},
-	// })
-	// t.pageSegmentedControl.SetOnItemSelected(func(index int) {
-	// 	item, ok := t.pageSegmentedControl.ItemByIndex(index)
-	// 	if !ok {
-	// 		return
-	// 	}
-	// 	switch item.ID {
-	// 	case "back":
-	// 		// t.model.SetMode("step1")
-	// 	case "next":
-	// 		t.model.SetMode("step1")
-	// 	default:
-	// 	}
-	// })
-	// t.pageSegmentedControl.SelectItemByID("")
-
-	t.buttonCancel.SetText("Cancel")
-	t.buttonCancel.SetOnUp(func() {
-		// TODO: Cancel sequence
-	})
-
-	t.form.SetItems([]basicwidget.FormItem{
-		{
-			PrimaryWidget:   &t.buttonBack,
-			SecondaryWidget: &t.buttonNext,
-		},
-		{
-			SecondaryWidget: &t.buttonCancel,
-		},
-	})
+	s.bodyText.SetMultiline(true)
+	s.bodyText.SetAutoWrap(true)
+	s.bodyText.SetValue(s.model.CurrentStep().BodyText)
 
 	u := basicwidget.UnitSize(context)
 	gl := layout.GridLayout{
-		Bounds: context.Bounds(t).Inset(u / 2),
+		Bounds: context.Bounds(s).Inset(u / 2),
 		Heights: []layout.Size{
-			layout.FixedSize(t.titleText.DefaultSize(context).Y),
+			layout.FixedSize(s.titleText.DefaultSize(context).Y),
 			layout.FlexibleSize(1),
-			layout.FixedSize(t.form.DefaultSize(context).Y),
-			layout.FixedSize(u + u/2),
 		},
 		RowGap: u / 2,
 	}
-	appender.AppendChildWidgetWithBounds(&t.titleText, gl.CellBounds(0, 0))
-	appender.AppendChildWidgetWithBounds(&t.bodyText, gl.CellBounds(0, 1))
-	appender.AppendChildWidgetWithBounds(&t.form, gl.CellBounds(0, 2))
+	appender.AppendChildWidgetWithBounds(&s.titleText, gl.CellBounds(0, 0))
+	appender.AppendChildWidgetWithBounds(&s.bodyText, gl.CellBounds(0, 1))
 
 	return nil
 }

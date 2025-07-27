@@ -44,31 +44,12 @@ func (s *sidebarContent) SetModel(model *Model) {
 func (s *sidebarContent) Build(context *guigui.Context, appender *guigui.ChildWidgetAppender) error {
 	s.list.SetStyle(basicwidget.ListStyleSidebar)
 
-	items := []basicwidget.ListItem[int]{
-		{
-			Text: "Welcome",
-			ID:   step0,
-		},
-		{
-			Text: "Location",
-			ID:   step1,
-		},
-		{
-			Text: "Load Extension",
-			ID:   step2,
-		},
-		{
-			Text: "Extension ID",
-			ID:   step3,
-		},
-		{
-			Text: "Registry",
-			ID:   step4,
-		},
-		{
-			Text: "Finish",
-			ID:   step5,
-		},
+	var items []basicwidget.ListItem[int]
+	for _, v := range s.model.Steps().Steps() {
+		items = append(items, basicwidget.ListItem[int]{
+			Text: v.TitleText,
+			ID:   v.ID,
+		})
 	}
 
 	s.list.SetItems(items)
