@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"os/exec"
@@ -123,22 +122,10 @@ func Collect() error {
 		return err
 	}
 
-	w, err := os.Create(filepath.Join(DEST, bin()))
-	if err != nil {
-		return err
-	}
-	defer w.Close()
-
-	r, err := os.Open(bin())
-	if err != nil {
-		return err
-	}
-	defer r.Close()
-
-	_, err = io.Copy(w, r)
-	if err != nil {
-		return err
-	}
+	sh.Copy(filepath.Join(DEST, bin()), bin())
+	sh.Copy(filepath.Join(DEST, "CREDITS"), "CREDITS")
+	sh.Copy(filepath.Join(DEST, "LICENSE"), "LICENSE")
+	sh.Copy(filepath.Join(DEST, "README.md"), "README.md")
 	return nil
 }
 
