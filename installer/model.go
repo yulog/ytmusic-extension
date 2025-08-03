@@ -22,6 +22,10 @@ const (
 	step5
 )
 
+const (
+	name = "YouTube Music Notifier"
+)
+
 type Model struct {
 	step int
 
@@ -117,14 +121,14 @@ func (s *StepsModel) Steps() []StepModel {
 			{
 				TitleText: "Welcome",
 				ID:        step0,
-				BodyText: `このウィザードは、[製品名] をあなたのコンピューターにインストールするお手伝いをします。インストールを開始する前に、すべての実行中のアプリケーションを閉じることをお勧めします。
+				BodyText: fmt.Sprintf(`このウィザードは、%s をあなたのコンピューターにインストールするお手伝いをします。
 
-続行するには、「次へ」をクリックしてください。`,
+続行するには、「次へ」をクリックしてください。`, name),
 			},
 			{
 				TitleText: "Location",
 				ID:        step1,
-				BodyText:  `[製品名] をインストールするフォルダーを選択してください。デフォルトの場所を使用するか、「参照...」をクリックして別のフォルダーを選択できます。`,
+				BodyText:  fmt.Sprintf(`%s をインストールするフォルダーを選択してください。デフォルトの場所を使用するか、「参照...」をクリックして別のフォルダーを選択できます。`, name),
 				Func: FuncModel{
 					Text: "Extract",
 					Func: func() {
@@ -145,10 +149,10 @@ func (s *StepsModel) Steps() []StepModel {
 			{
 				TitleText: "Load Extension",
 				ID:        step2,
-				BodyText: `このステップでは、[製品名] で使用する拡張機能を読み込みます。
+				BodyText: fmt.Sprintf(`このステップでは、%s で使用する拡張機能を読み込みます。
 
 1. chrome://extensions からデベロッパーモードを有効化します。
-2. [パッケージ化されていない拡張機能を読み込む]から前のステップで展開された chrome-extension フォルダを指定します。`,
+2. [パッケージ化されていない拡張機能を読み込む]から前のステップで展開された chrome-extension フォルダを指定します。`, name),
 				CancelFunc: func() {
 					os.Exit(1)
 				},
@@ -167,7 +171,7 @@ func (s *StepsModel) Steps() []StepModel {
 			{
 				TitleText: "Registry",
 				ID:        step4,
-				BodyText:  `[製品名] は、設定の一部をシステムのレジストリ（Windowsの場合）に保存する必要があります。これにより、アプリケーションが正しく動作します。`,
+				BodyText:  fmt.Sprintf(`%s は、設定の一部をシステムのレジストリ（Windowsの場合）に保存する必要があります。これにより、アプリケーションが正しく動作します。`, name),
 				Func: FuncModel{
 					Text: "Register",
 					Func: func() {
@@ -190,9 +194,9 @@ func (s *StepsModel) Steps() []StepModel {
 			{
 				TitleText: "Finish",
 				ID:        step5,
-				BodyText: `[製品名] のインストールが正常に完了しました。
+				BodyText: fmt.Sprintf(`%s のインストールが正常に完了しました。
 				
-「完了」をクリックしてインストーラーを終了してください。`,
+「完了」をクリックしてインストーラーを終了してください。`, name),
 				Func: FuncModel{
 					Text: "Finish",
 					Func: func() {
