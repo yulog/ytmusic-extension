@@ -15,8 +15,6 @@ import (
 
 const (
 	hostName = "com.github.yulog.ytmusic_notifier"
-	// exeName  = "native-app.exe"
-	// extensionID = "pckomeadlamhidfmcmhkfdehlfblaeah" // Replace with your actual extension ID later
 )
 
 // Manifest represents the structure of the native messaging host manifest.
