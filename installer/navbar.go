@@ -68,18 +68,25 @@ func (n *navigationPanelContent) Build(context *guigui.Context) error {
 	})
 
 	if s := model.CurrentStep(); s.Func.Text != "" {
+		context.SetEnabled(&n.buttonConfirm, s.ConfirmButton.Enabled())
 		n.buttonConfirm.SetText(s.Func.Text)
 		n.buttonConfirm.SetOnUp(func() {
-			s.Func.Func()
-			if !s.Last {
-				s.Func.Text = ""
-			}
 			if s.BackButton.Enabled() {
 				s.BackButton.SetEnabled(false)
 			}
 			if s.Form.Enabled() {
 				s.Form.SetEnabled(false)
 			}
+			if s.ConfirmButton.Enabled() {
+				s.ConfirmButton.SetEnabled(false)
+			}
+			go func() {
+				s.Func.Func()
+				if !s.Last {
+					s.Func.Text = ""
+				}
+
+			}()
 		})
 	}
 

@@ -2,7 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"io/fs"
+	"log"
 	"os"
+	"path/filepath"
+	"time"
+
+	"github.com/yulog/ytmusic-extension/dist"
+	"github.com/yulog/ytmusic-extension/tools"
 )
 
 const (
@@ -57,17 +65,20 @@ type StepsModel struct {
 
 	location    string
 	extensionID string
+
+	output string
 }
 
 type StepModel struct {
-	ID         int
-	TitleText  string
-	BodyText   string
-	Func       FuncModel
-	CancelFunc func()
-	BackButton EnabledModel
-	Form       DisabledModel
-	Last       bool
+	ID            int
+	TitleText     string
+	BodyText      string
+	Func          FuncModel
+	CancelFunc    func()
+	BackButton    EnabledModel
+	ConfirmButton DisabledModel
+	Form          DisabledModel
+	Last          bool
 }
 
 type FuncModel struct {
@@ -101,6 +112,7 @@ func (e *EnabledModel) SetEnabled(enabled bool) {
 
 func (s *StepsModel) Steps() []StepModel {
 	if s.steps == nil {
+		log.SetOutput(io.MultiWriter(s, os.Stdout))
 		s.steps = []StepModel{
 			{
 				TitleText: "Welcome",
@@ -116,7 +128,11 @@ func (s *StepsModel) Steps() []StepModel {
 				Func: FuncModel{
 					Text: "Extract",
 					Func: func() {
-						fmt.Println("Extract!!", s.location)
+						log.Println("=== Extract ===")
+						sub, _ := fs.Sub(dist.Contents, "contents")
+						os.CopyFS(s.location, sub)
+						log.Printf("Created files at: %s", s.location)
+						log.Println("=== Extract ===")
 					},
 				},
 				CancelFunc: func() {
@@ -129,7 +145,10 @@ func (s *StepsModel) Steps() []StepModel {
 			{
 				TitleText: "Load Extension",
 				ID:        step2,
-				BodyText:  `このステップでは、[製品名] で使用する拡張機能を読み込みます。`,
+				BodyText: `このステップでは、[製品名] で使用する拡張機能を読み込みます。
+
+1. chrome://extensions からデベロッパーモードを有効化します。
+2. [パッケージ化されていない拡張機能を読み込む]から前のステップで展開された chrome-extension フォルダを指定します。`,
 				CancelFunc: func() {
 					os.Exit(1)
 				},
@@ -152,7 +171,13 @@ func (s *StepsModel) Steps() []StepModel {
 				Func: FuncModel{
 					Text: "Register",
 					Func: func() {
-						fmt.Println("Register!!", s.extensionID)
+						log.Println("=== Register ===")
+						// log.Println("Register!!", s.extensionID)
+						manifestPath := tools.CreateManifest(s.location, "native-app.exe", s.extensionID)
+						tools.Register(manifestPath)
+						time.Sleep(3 * time.Second)
+						log.Println("3 seconds")
+						log.Println("=== Register ===")
 					},
 				},
 				CancelFunc: func() {
@@ -196,7 +221,7 @@ func (s *StepsModel) Location() string {
 			fmt.Println(err)
 			return ""
 		}
-		s.location = dir
+		s.location = filepath.Join(dir, "ytmusic-extension")
 	}
 	return s.location
 }
@@ -211,4 +236,9 @@ func (s *StepsModel) ExtensionID() string {
 
 func (s *StepsModel) SetExtensionID(id string) {
 	s.extensionID = id
+}
+
+func (s *StepsModel) Write(p []byte) (n int, err error) {
+	s.output += string(p)
+	return len(p), nil
 }
