@@ -126,6 +126,7 @@ func Collect() error {
 	sh.Copy(filepath.Join(DEST, "CREDITS"), "CREDITS")
 	sh.Copy(filepath.Join(DEST, "LICENSE"), "LICENSE")
 	sh.Copy(filepath.Join(DEST, "README.md"), "README.md")
+	sh.Copy(filepath.Join(DEST, "OFL.txt"), filepath.Join("resources", "fonts", "OFL.txt"))
 	return nil
 }
 
