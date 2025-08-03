@@ -122,11 +122,16 @@ func Collect() error {
 		return err
 	}
 
-	sh.Copy(filepath.Join(DEST, bin()), bin())
-	sh.Copy(filepath.Join(DEST, "CREDITS"), "CREDITS")
-	sh.Copy(filepath.Join(DEST, "LICENSE"), "LICENSE")
-	sh.Copy(filepath.Join(DEST, "README.md"), "README.md")
-	sh.Copy(filepath.Join(DEST, "OFL.txt"), filepath.Join("resources", "fonts", "OFL.txt"))
+	files := []string{
+		bin(),
+		"CREDITS",
+		"LICENSE",
+		"README.md",
+		filepath.Join("resources", "fonts", "OFL.txt"),
+	}
+	for _, file := range files {
+		sh.Copy(filepath.Join(DEST, filepath.Base(file)), file)
+	}
 	return nil
 }
 
